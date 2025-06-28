@@ -23,24 +23,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      # Устанавливаем JS-зависимости, потому что нам нужен cargo-cp-artifact
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      # ШАГ 1: Собираем и копируем с помощью рабочего метода
-      # Этот шаг мы знаем, что работает из вашего успешного CI
       - name: Build and copy the native addon
         run: npx cargo-cp-artifact -nc build/Release/addon.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics
 
-      # ШАГ 2: Вручную упаковываем в архив
-      # Этот шаг просто архивирует то, что создал предыдущий шаг
       - name: Manually package the addon
         shell: bash
         run: |
+          mkdir -p prebuilds
           cd build/Release
           tar -czvf ../../prebuilds/rustcatch-v${{ github.ref_name }}-node-v108-win32-x64.tar.gz addon.node
 
-      # ШАГ 3: Загружаем архив
       - name: Upload prebuilds to release
         uses: AButler/upload-release-assets@v2.0
         with:
