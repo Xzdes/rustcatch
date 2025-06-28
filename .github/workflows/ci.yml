@@ -37,5 +37,7 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
+      # --- ВОТ КЛЮЧЕВОЕ МЕСТО ---
+      # Этот шаг должен выполнять ТОЛЬКО 'npm run build'
       - name: Build native addon to test compilation
         run: npm run build
