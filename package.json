@@ -1,0 +1,17 @@
+{
+  "name": "rustcatch",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "author": "Pavel Gulaev <xzdes@yandex.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "cargo-cp-artifact": "^0.1"
+  },
+  "scripts": {
+    "install": "npm run build",
+    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
+    "build:dev": "npm run build -- --dev",
+    "test": "node test.js"
+  }
+}
