@@ -16,26 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxdo-dev libxtst-dev
-
-      - name: Install Node.js dependencies
+          - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      - name: Build and Package Prebuilds
+      # ШАГ 1: Собрать артефакт в стандартную для prebuildify папку
+      - name: Build native addon
+        run: npm run build
+
+      # ШАГ 2: Сказать prebuildify упаковать то, что уже лежит в стандартной папке
+      - name: Package with Prebuildify
         run: npm run prebuild
 
       - name: Upload prebuilds to release
