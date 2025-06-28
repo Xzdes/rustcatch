@@ -1,70 +1,43 @@
-name: Prebuilds
+name: Prebuild
 
-# Запускать этот воркфлоу, когда на GitHub создается новый "Релиз"
 on:
   release:
     types: [created]
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }} (${{ matrix.target }})
+    name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # Определяем комбинации ОС и архитектур для сборки
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-          - os: macos-latest
-            target: x86_64-apple-darwin # Для Intel Mac
-          - os: macos-latest
-            target: aarch64-apple-darwin # Для M1/M2 Mac
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      # 1. Скачиваем наш код из репозитория
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # 2. Устанавливаем Rust
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          targets: ${{ matrix.target }}
+          node-version: '18'
 
-      # 3. Устанавливаем Node.js
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
 
-      # 4. Устанавливаем системные зависимости (только для Linux)
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libxdo-dev libxtst-dev libx11-dev libxkbcommon-dev libxkbcommon-x11-dev
+          sudo apt-get install -y libxdo-dev libxtst-dev
 
-      # 5. Устанавливаем JS зависимости
-      - name: Install dependencies
+      - name: Install Node.js dependencies
         run: npm install
 
-      # 6. Компилируем наш Rust-код
-      - name: Build and package
-        # Запускаем скрипт, который мы создали в package.json
-        run: npm run build -- --target=${{ matrix.target }}
+      - name: Build and Package Prebuilds
+        run: npm run prebuild
 
-      # 7. Упаковываем результат в .tar.gz архив
-      - name: Create tarball
-        run: |
-          npm install -g prebuild
-          prebuild -t ${{ matrix.target }} --strip
-
-      # 8. Загружаем архив в наш Релиз на GitHub
-      - name: Upload to release
-        uses: actions/upload-release-asset@v1
+      - name: Upload prebuilds to release
+        uses: AButler/upload-release-assets@v3.0.0
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./prebuilds/${{ matrix.package_name }}
-          asset_name: ${{ matrix.package_name }}
-          asset_content_type: application/gzip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: 'prebuilds/*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

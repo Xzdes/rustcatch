@@ -1,6 +1,6 @@
 {
   "name": "rustcatch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A high-performance, cross-platform global keyboard event listener for Node.js, written in Rust.",
   "main": "lib/index.js",
   "author": "Pavel Gulaev <xzdes@yandex.ru>",
@@ -28,17 +28,21 @@
   ],
   "files": [
     "lib",
-    "native/index.node",
+    "prebuilds",
     "README.md",
     "LICENSE"
   ],
   "dependencies": {
-    "cargo-cp-artifact": "^0.1"
+    "node-gyp-build": "^4.8.0"
+  },
+  "devDependencies": {
+    "cargo-cp-artifact": "^0.1.8",
+    "prebuild": "^12.1.0"
   },
   "scripts": {
-    "install": "prebuild-install || npm run build",
-    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
-    "build:dev": "npm run build -- --dev",
+    "install": "node-gyp-build",
+    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --message-format=json-render-diagnostics",
+    "prebuild": "prebuild --backend=cargo-cp-artifact --strip",
     "test": "node test.js"
   }
 }
