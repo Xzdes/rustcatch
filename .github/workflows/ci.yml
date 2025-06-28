@@ -1,12 +1,14 @@
-name: Release Prebuilds
+name: Continuous Integration
 
 on:
-  release:
-    types: [created] # Запускать ТОЛЬКО при создании релиза
+  push:
+    branches: [ main, master ] # Запускать на коммиты в main или master
+  pull_request:
+    branches: [ main, master ] # Запускать на Pull Request в main или master
 
 jobs:
-  build-and-upload:
-    name: Build and Upload for ${{ matrix.os }}
+  test-build:
+    name: Test Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,14 +37,5 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      - name: Build native addon
+      - name: Build native addon to test compilation
         run: npm run build
-
-      - name: Package with Prebuildify
-        run: npm run prebuild
-
-      - name: Upload prebuilds to release
-        uses: AButler/upload-release-assets@v2.0
-        with:
-          files: 'prebuilds/*.tar.gz'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
