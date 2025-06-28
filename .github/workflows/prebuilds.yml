@@ -2,7 +2,7 @@ name: Release Prebuilds
 
 on:
   release:
-    types: [created] # Запускать ТОЛЬКО при создании релиза
+    types: [created]
 
 jobs:
   build-and-upload:

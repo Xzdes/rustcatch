@@ -1,6 +1,6 @@
 {
   "name": "rustcatch",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "A high-performance, cross-platform global keyboard event listener for Node.js, written in Rust.",
   "main": "lib/index.js",
   "author": "Pavel Gulaev <xzdes@yandex.ru>",
@@ -13,28 +13,9 @@
   "bugs": {
     "url": "https://github.com/Xzdes/rustcatch/issues"
   },
-  "keywords": [
-    "keyboard",
-    "hook",
-    "global",
-    "listener",
-    "events",
-    "keypress",
-    "keydown",
-    "keyup",
-    "rust",
-    "native",
-    "addon"
-  ],
-  "files": [
-    "lib",
-    "prebuilds",
-    "README.md",
-    "LICENSE"
-  ],
-  "dependencies": {
-    "node-gyp-build": "^4.8.0"
-  },
+  "keywords": [ "keyboard", "hook", "global", "listener", "events", "keypress", "keydown", "keyup", "rust", "native", "addon" ],
+  "files": [ "lib", "prebuilds", "README.md", "LICENSE" ],
+  "dependencies": { "node-gyp-build": "^4.8.0" },
   "devDependencies": {
     "cargo-cp-artifact": "^0.1.8",
     "prebuildify": "^6.0.0"

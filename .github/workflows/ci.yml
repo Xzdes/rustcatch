@@ -2,9 +2,9 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ main, master ] # Запускать на коммиты в main или master
+    branches: [ main, master ]
   pull_request:
-    branches: [ main, master ] # Запускать на Pull Request в main или master
+    branches: [ main, master ]
 
 jobs:
   test-build:
