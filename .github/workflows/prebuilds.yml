@@ -35,7 +35,11 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      - name: Build and Package Prebuilds
+
+      - name: Build the native addon
+        run: npm run build
+
+      - name: Package the prebuilds
         run: npm run prebuild
 
       - name: Upload prebuilds to release

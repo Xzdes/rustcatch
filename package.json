@@ -39,10 +39,10 @@
     "cargo-cp-artifact": "^0.1.8",
     "prebuild": "^12.1.0"
   },
-  "scripts": {
+"scripts": {
     "install": "node-gyp-build",
-    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --message-format=json-render-diagnostics",
-    "prebuild": "npm run build && prebuild --path native --strip",
+    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
+    "prebuild": "prebuild --path native --strip",
     "test": "node test.js"
   }
 }
