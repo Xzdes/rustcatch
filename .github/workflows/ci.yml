@@ -28,5 +28,6 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      - name: Build native addon to test compilation
-        run: npm run build
+      # --- ВОТ ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ---
+      - name: Build native addon directly
+        run: npx cargo-cp-artifact -nc build/Release/addon.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics
