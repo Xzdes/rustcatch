@@ -1,16 +1,13 @@
-name: Release Prebuilds
+name: Release Prebuilds (Windows Only)
 
 on:
   release:
     types: [created]
 
 jobs:
-  build-and-upload:
-    name: Build and Upload for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+  build-and-upload-windows:
+    name: Build and Upload for Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -25,12 +22,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxdo-dev libxtst-dev
 
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
