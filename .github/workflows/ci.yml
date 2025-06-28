@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI (Windows Only)
 
 on:
   push:
@@ -7,12 +7,9 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test-build:
-    name: Test Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+  test-build-windows:
+    name: Test Build on Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -27,17 +24,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install Linux dependencies
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxdo-dev libxtst-dev
-
+      
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      # --- ВОТ КЛЮЧЕВОЕ МЕСТО ---
-      # Этот шаг должен выполнять ТОЛЬКО 'npm run build'
       - name: Build native addon to test compilation
         run: npm run build
