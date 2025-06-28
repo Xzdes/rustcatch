@@ -1,24 +1,44 @@
 {
   "name": "rustcatch",
   "version": "0.1.0",
-  "description": "A global keyboard listener written in Rust",
+  "description": "A high-performance, cross-platform global keyboard event listener for Node.js, written in Rust.",
   "main": "lib/index.js",
   "author": "Pavel Gulaev <xzdes@yandex.ru>",
   "license": "MIT",
+  "homepage": "https://github.com/Xzdes/rustcatch#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xzdes/rustcatch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Xzdes/rustcatch/issues"
+  },
+  "keywords": [
+    "keyboard",
+    "hook",
+    "global",
+    "listener",
+    "events",
+    "keypress",
+    "keydown",
+    "keyup",
+    "rust",
+    "native",
+    "addon"
+  ],
+  "files": [
+    "lib",
+    "native/index.node",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "cargo-cp-artifact": "^0.1",
-    "prebuild-install": "^7.1.1"
+    "cargo-cp-artifact": "^0.1"
   },
   "scripts": {
-    "install": "prebuild-install || npm run build",
+    "install": "npm run build",
     "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
     "build:dev": "npm run build -- --dev",
     "test": "node test.js"
-  },
-  "binary": {
-    "module_name": "native/index.node",
-    "host": "https://github.com/Xzdes/rustcatch/releases/download/",
-    "remote_path": "v{version}",
-    "package_name": "{name}-v{version}-{runtime}-v{abi}-{platform}-{arch}.tar.gz"
   }
 }
