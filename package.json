@@ -1,6 +1,6 @@
 {
   "name": "rustcatch",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A high-performance, cross-platform global keyboard event listener for Node.js, written in Rust.",
   "main": "lib/index.js",
   "author": "Pavel Gulaev <xzdes@yandex.ru>",
@@ -14,14 +14,18 @@
     "url": "https://github.com/Xzdes/rustcatch/issues"
   },
   "keywords": [ "keyboard", "hook", "global", "listener", "events", "keypress", "keydown", "keyup", "rust", "native", "addon" ],
-  "files": [ "lib", "prebuilds", "README.md", "LICENSE" ],
-  "dependencies": { "node-gyp-build": "^4.8.0" },
+  "files": [
+    "lib",
+    "native/index.node",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "cargo-cp-artifact -nc native/index.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {},
   "devDependencies": {
     "cargo-cp-artifact": "^0.1.8"
-  },
-  "scripts": {
-    "install": "node-gyp-build",
-    "build": "cargo-cp-artifact -nc build/Release/addon.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics",
-    "test": "node test.js"
   }
 }
