@@ -18,29 +18,32 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Node.js dependencies
-        run: npm install --ignore-scripts
+      # 1. Просто компилируем Rust проект. Никаких npm.
+      - name: Build native addon with Cargo
+        run: cargo build --release --manifest-path native/Cargo.toml
 
-      - name: Build native addon
-        run: npx cargo-cp-artifact -nc build/Release/addon.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics
+      # 2. Вручную создаем папки и копируем файл
+      - name: Stage addon for packaging
+        shell: bash
+        run: |
+          # Создаем папки, куда будем класть файл
+          mkdir -p build/Release
+          # Копируем скомпилированный файл из стандартного пути Cargo в наш
+          # На Windows он называется .dll
+          cp native/target/release/rustcatch.dll build/Release/addon.node
 
-      # --- НОВЫЙ ШАГ УПАКОВКИ ---
+      # 3. Вручную упаковываем в архив
       - name: Manually package the addon
         shell: bash
         run: |
-          # 1. Заходим в папку с собранным файлом
           cd build/Release
-          # 2. Создаем prebuilds/ папку, если ее нет
           mkdir -p ../../prebuilds
-          # 3. Упаковываем addon.node в tar.gz архив с правильным именем
-          #    (Например: rustcatch-v0.2.8-node-v108-win32-x64.tar.gz)
           tar -czvf ../../prebuilds/rustcatch-v${{ github.ref_name }}-node-v108-win32-x64.tar.gz addon.node
 
+      # 4. Загружаем архив
       - name: Upload prebuilds to release
         uses: AButler/upload-release-assets@v2.0
         with:
