@@ -1,14 +1,12 @@
-name: Continuous Integration
+name: Release Prebuilds
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  release:
+    types: [created]
 
 jobs:
-  test-build:
-    name: Test Build on ${{ matrix.os }}
+  build-and-upload:
+    name: Build and Upload for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -37,5 +35,14 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install --ignore-scripts
 
-      - name: Build native addon to test compilation
+      - name: Build native addon
         run: npx cargo-cp-artifact -nc build/Release/addon.node -- cargo build --release --manifest-path native/Cargo.toml --message-format=json-render-diagnostics
+
+      - name: Package with Prebuildify
+        run: npx prebuildify --strip -t 18.0.0
+
+      - name: Upload prebuilds to release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'prebuilds/*.tar.gz'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
