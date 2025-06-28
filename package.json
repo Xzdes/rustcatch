@@ -1,6 +1,6 @@
 {
   "name": "rustcatch",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A high-performance, cross-platform global keyboard event listener for Node.js, written in Rust.",
   "main": "lib/index.js",
   "author": "Pavel Gulaev <xzdes@yandex.ru>",
