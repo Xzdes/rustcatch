@@ -1,3 +1,5 @@
+# .github/workflows/prebuild.yml
+
 name: Prebuild
 
 on:
@@ -21,8 +23,12 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      # --- НОВЫЙ ШАГ ---
+      # Устанавливаем стабильную версию Python, чтобы избежать проблем с node-gyp
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
